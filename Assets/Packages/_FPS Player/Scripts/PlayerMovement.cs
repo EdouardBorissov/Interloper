@@ -66,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
         float speed = (!sprint) ? walkSpeed : runSpeed;
         if (crouching) speed = crouchSpeed;
 
+
         if (grounded)
         {
             moveDirection = new Vector3(input.x, -antiBumpFactor, input.y);
