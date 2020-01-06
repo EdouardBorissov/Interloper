@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public enum Status { idle, moving, crouching, sliding, climbingLadder, wallRunning, grabbedLedge, climbingLedge, vaulting }
 
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     Vector3 vaultDir;
 
     public PlayerMovement movement;
+    public Transform PlayerCamera;
     PlayerInput playerInput;
     AnimateLean animateLean;
 
@@ -39,7 +41,8 @@ public class PlayerController : MonoBehaviour
     float radius;
     float height;
     float halfradius;
-    float halfheight;
+    float crouchHeight;
+    public float crouchDivider = 4;
 
     int wallDir = 1;
 
@@ -56,8 +59,9 @@ public class PlayerController : MonoBehaviour
         radius = movement.controller.radius;
         height = movement.controller.height;
         halfradius = radius / 2f;
-        halfheight = height / 2f;
-        rayDistance = halfheight + radius + .1f;
+        crouchHeight = height / crouchDivider;
+        rayDistance = crouchHeight + radius + .1f;
+        //PlayerCamera.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - movement.controller.radius, gameObject.transform.position.z);
     }
 
     /******************************* UPDATE ******************************/
@@ -191,7 +195,7 @@ public class PlayerController : MonoBehaviour
         if(playerInput.crouch && canSlide())
         {
             slideDir = transform.forward;
-            movement.controller.height = halfheight;
+            movement.controller.height = crouchHeight;
             controlledSlide = true;
             slideTime = 1f;
         }
@@ -242,13 +246,15 @@ public class PlayerController : MonoBehaviour
 
     void Crouch()
     {
-        movement.controller.height = halfheight;
+        movement.controller.height = crouchHeight;
+        CameraShaker.Instance.RestPositionOffset = new Vector3(0,0,0);
         status = Status.crouching;
     }
 
     void Uncrouch()
     {
         movement.controller.height = height;
+        CameraShaker.Instance.RestPositionOffset = new Vector3(0, .8f, 0);
         status = Status.moving;
     }
     /*********************************************************************/
@@ -323,7 +329,8 @@ public class PlayerController : MonoBehaviour
         if (!hasWallToSide(wallDir) || movement.grounded)
             status = Status.moving;
 
-        movement.Move(move, movement.runSpeed, (1f - s) + (s / 4f));
+        // movement.Move(move, movement.runSpeed, (1f - s) + (s / 4f));
+        movement.Move(move, movement.runSpeed, .1f);
     }
 
     void CheckForWallrun()
@@ -441,7 +448,7 @@ public class PlayerController : MonoBehaviour
         Vector3 localPos = vaultHelper.transform.InverseTransformPoint(transform.position);
         Vector3 move = (vaultDir + (Vector3.up * -(localPos.z - radius) * height)).normalized;
 
-        if(localPos.z > halfheight)
+        if(localPos.z > crouchHeight)
         {
             movement.controller.height = height;
             status = Status.moving;
@@ -460,7 +467,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Physics.SphereCast(transform.position + (transform.forward * (radius - 0.25f)), 0.25f, transform.forward, out var sphereHit, checkDis, vaultLayer))
             {
-                if (Physics.SphereCast(sphereHit.point + (Vector3.up * halfheight), radius, Vector3.down, out var hit, halfheight - radius, vaultLayer))
+                if (Physics.SphereCast(sphereHit.point + (Vector3.up * crouchHeight), radius, Vector3.down, out var hit, crouchHeight - radius, vaultLayer))
                 {
                     //Check above the point to make sure the player can fit
                     if (Physics.SphereCast(hit.point + (Vector3.up * radius), radius, Vector3.up, out var trash, height-radius))
@@ -494,7 +501,7 @@ public class PlayerController : MonoBehaviour
     bool hasObjectInfront(float dis, LayerMask layer)
     {
         Vector3 top = transform.position + (transform.forward * 0.25f);
-        Vector3 bottom = top - (transform.up * halfheight);
+        Vector3 bottom = top - (transform.up * crouchHeight);
 
         return (Physics.CapsuleCastAll(top, bottom, 0.25f, transform.forward, dis, layer).Length >= 1);
     }
