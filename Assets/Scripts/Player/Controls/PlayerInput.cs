@@ -8,6 +8,7 @@ using EZCameraShake;
 
 public class PlayerInput : MonoBehaviour
 {
+    //test comment
     private PlayerNewInput playerControlInput = null;
 
     private Vector2 previous;
