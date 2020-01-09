@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     Vector3 vaultDir;
 
     public PlayerMovement movement;
-    public Transform PlayerCamera;
+
     PlayerInput playerInput;
     AnimateLean animateLean;
 
