@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Abstract_Gun
+public abstract class Abstract_Gun : MonoBehaviour
 {
     // Start is called before the first frame update
     [Header("Combat Variables")]
@@ -12,8 +12,13 @@ public abstract class Abstract_Gun
     /// How often (in float seconds) the gun can be used.
     /// </summary>
     public float rateOfFire;
+    public bool canFire;
     public float damagePerAmmo;
     public List<Transform> muzzle;
+    public ParticleSystem muzzleFlash;
+
+
+    
 
     [Header("Ammo Variables")]
 
@@ -22,6 +27,8 @@ public abstract class Abstract_Gun
     /// The ammo currently loaded in the gun.
     /// </summary>
     public float currentLoadedAmmo;
+
+    protected Camera mainCamera;
 
     [Tooltip("How ammo can be loaded into the gun.")]
     /// <summary>
@@ -51,10 +58,23 @@ public abstract class Abstract_Gun
     public float screenShakeDuration;
 
 
+    public void Start()
+    {
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+    }
 
 
+    public abstract void FireGun();
+
+    public abstract void Reload();
 
     public abstract float GetGunDamage();
 
-    public abstract void SetGunDamage();
+    public abstract void SetGunDamage(float newAmount);
+
+    public abstract float GetGunAmmoReserve();
+
+    public abstract void SetGunAmmoReserve(float newAmount);
+
+
 }
