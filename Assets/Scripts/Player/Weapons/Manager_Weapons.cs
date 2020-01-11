@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class Manager_Weapons : MonoBehaviour
 {
-    public 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static Manager_Weapons instance;
 
-    // Update is called once per frame
-    void Update()
+    public Abstract_Gun currentGun;
+
+    public void OnEnable()
     {
-        
+        instance = this;
     }
 
 

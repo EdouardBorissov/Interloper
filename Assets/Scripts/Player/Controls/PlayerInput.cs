@@ -11,6 +11,7 @@ public class PlayerInput : MonoBehaviour
     //test comment
     private PlayerNewInput playerControlInput = null;
 
+
     private Vector2 previous;
     private Vector2 _down;
 
@@ -90,6 +91,11 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetButtonDown("Fire1"))
+        {
+            Manager_Weapons.instance.currentGun.FireGun();
+            CameraShaker.Instance.ShakeOnce(3, 3, .1f, .1f);
+        }
         if (Input.GetKeyDown(KeyCode.B))
         {
             Debug.Log("Small shake");
