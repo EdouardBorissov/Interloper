@@ -100,14 +100,13 @@ public class PlayerInput : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             weaponManager.currentGun.Reload();
-            CameraShaker.Instance.ShakeOnce(3, 3, .1f, .3f, new Vector3(0f, -0.05f, 0.50f), new Vector3(0f, 0f, 0f));
-
         }
 
         if (Input.GetKeyDown(KeyCode.B))
         {
             Debug.Log("ALL AMMO!");
             weaponManager.currentGun.SetGunAmmoReserve(weaponManager.currentGun.maxReserveAmmo);
+            weaponManager.UpdateAmmoUI();
         }
        
         _down = Vector2.zero;

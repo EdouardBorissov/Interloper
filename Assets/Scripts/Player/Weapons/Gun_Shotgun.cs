@@ -14,11 +14,16 @@ public class Gun_Shotgun : Abstract_Gun
 
     public GameObject impactParticle;
 
+
     public override void FireGun()
     {
+
         //if has enough ammo, fire, if not,  try to reload, if not enough reserves, play trigger click noise
-        if (currentLoadedAmmo > maxLoadedAmmo)
+        if (currentLoadedAmmo > 0 && canFire)
         { // If any ammo loaded, fire!
+
+            gunAnimator.SetTrigger("isShooting");
+            
             GunShakeCamera();
             --currentLoadedAmmo;
             weaponManager.UpdateAmmoUI();
@@ -57,8 +62,9 @@ public class Gun_Shotgun : Abstract_Gun
 
             } //end for loop
         }
-        else if (currentLoadedAmmo <= maxLoadedAmmo)
+        else if (currentLoadedAmmo <= 0)
         { // no ammo loaded
+            canFire = false;
             //play "no loaded ammo sound" probably a click or something
             if (currentReserveAmmo > 0)
             { // if we have ammo left over, reload
@@ -74,28 +80,44 @@ public class Gun_Shotgun : Abstract_Gun
 
     public override void Reload()
     {
+
+        //Used by animator and set back to true. Prevents spamming reload during anim.
         if (currentLoadedAmmo < maxLoadedAmmo)
         {//check if we even need to reload
 
-            float ammoToLoad = maxLoadedAmmo - currentLoadedAmmo;
-
-            //will have to play certain animations here, but after they're done VVV
-
-            for (int i = 0; i < ammoToLoad; i++)
+            if (currentReserveAmmo >= 0 && canReload)
             {
-                if (currentReserveAmmo > 0 && currentLoadedAmmo < maxLoadedAmmo)
-                {//load ammo until we can't any more!
-                    currentLoadedAmmo++;
-                }
-                else
-                {//stops the loop if we run out of ammo or are full!
-                    break;
-                }
-            }
-            weaponManager.UpdateAmmoUI(); //update the weapon UI
-        }
+                canReload = false; //used by animator, set true at end of reloading anim
+                float ammoToLoad = maxLoadedAmmo - currentLoadedAmmo;
 
+                if(ammoToLoad == 1)
+                {
+                    gunAnimator.SetTrigger("isReloadingOne");
+                }
+                else if(ammoToLoad == 2)
+                {
+                    gunAnimator.SetTrigger("isReloadingTwo");
+                }
+
+                for (int i = 0; i < ammoToLoad; i++)
+                {
+                    if (currentReserveAmmo > 0 && currentLoadedAmmo < maxLoadedAmmo)
+                    {//load ammo until we can't any more!
+                        currentLoadedAmmo++;
+                        currentReserveAmmo--;
+                    }
+                    else
+                    {//stops the loop if we run out of ammo or are full!
+                        break;
+                    }
+                } // end for
+
+                weaponManager.UpdateAmmoUI(); //update the weapon UI
+            }
+            
+        }
     }
+
 
     public override float GetGunAmmoReserve()
     {
@@ -121,4 +143,5 @@ public class Gun_Shotgun : Abstract_Gun
     {
         CameraShaker.Instance.ShakeOnce(3, 3, .1f, .3f, new Vector3(0f, -0.05f, 0.50f), new Vector3(0f, 0f, 0f));
     }
+
 }

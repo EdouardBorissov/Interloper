@@ -12,7 +12,8 @@ public abstract class Abstract_Gun : MonoBehaviour
     /// How often (in float seconds) the gun can be used.
     /// </summary>
     public float rateOfFire;
-    public bool canFire;
+    public bool canFire = true;
+    public bool canReload = true;
     public float damagePerAmmo;
     public List<Transform> muzzle;
     public ParticleSystem muzzleFlash;
@@ -49,6 +50,8 @@ public abstract class Abstract_Gun : MonoBehaviour
     /// </summary>
     public float maxReserveAmmo;
 
+    [Header("Visual Variables")]
+    [Space(30)]
     [Tooltip("How much the screen shakes per shot.")]
     /// <summary>
     /// How much the screen shakes per shot.
@@ -56,21 +59,50 @@ public abstract class Abstract_Gun : MonoBehaviour
     public float screenShakeMagnitude;
 
     [Tooltip("How long the screen shakes.")]
+    /// <summary>
+    /// How long the screen shakes per shot.
+    /// </summary>
     public float screenShakeDuration;
+
+    /// <summary>
+    /// The animator on each gun, used to trigger various animations.
+    /// </summary>
+    public Animator gunAnimator;
 
 
     public void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<Manager_Weapons>();
+        gunAnimator = gameObject.GetComponent<Animator>();
     }
 
 
     public abstract void FireGun();
 
+    public void SetCanFireTrue()
+    {
+        canFire = true;
+    }
+
+    public void SetCanFireFalse()
+    {
+        canFire = false;
+    }
+
     public abstract void GunShakeCamera();
 
     public abstract void Reload();
+
+    public void SetCanReloadTrue()
+    {
+        canReload = true;
+    }
+
+    public void SetCanReloadFalse()
+    {
+        canReload = false;
+    }
 
     public abstract float GetGunDamage();
 

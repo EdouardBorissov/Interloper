@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//using TMPro;
+using TMPro;
 
 public class Manager_Weapons : MonoBehaviour
 {
     public Abstract_Gun currentGun;
-   // public TextMeshProUGUI currentAmmoText;
-  //  public TextMeshProUGUI reserveAmmoText;
+    public TextMeshProUGUI ammoText;
+
+    private void Start()
+    {
+        UpdateAmmoUI();
+    }
 
     public void UpdateAmmoUI()
     {
-        //currentAmmoText.text = "" + currentGun.currentLoadedAmmo;
-       // reserveAmmoText.text = "" + currentGun.currentReserveAmmo;
+        ammoText.text = "" + currentGun.currentLoadedAmmo + " / " + currentGun.currentReserveAmmo;
+        
     }
 
 }
