@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -34,6 +35,8 @@ public class PlayerMovement : MonoBehaviour
     private bool canCoyoteTime = true;
     private bool isJumping = false;
 
+    private bool canLandShake = true;
+
     private void Start()
     {
         // Saving component references to improve performance.
@@ -62,6 +65,8 @@ public class PlayerMovement : MonoBehaviour
             controller.Move(moveDirection * Time.deltaTime);
             if ((controller.collisionFlags & CollisionFlags.Below) != 0)
             {
+                CameraShaker.Instance.ShakeOnce(2, 2, .2f, .3f, new Vector3(0.50f, 0.50f, 0.50f), new Vector3(0f, 0f, 0f));
+
                 grounded = true;
                 isJumping = false;
 
@@ -108,14 +113,23 @@ public class PlayerMovement : MonoBehaviour
             moveDirection = new Vector3(input.x, -antiBumpFactor, input.y);
             moveDirection = transform.TransformDirection(moveDirection) * speed;
 
-        
-                UpdateJump();
+
+            UpdateJump();
+
+            if(canLandShake)
+            {
+                CameraShaker.Instance.ShakeOnce(3, 3, .3f, .3f, new Vector3(.25f, .25f, .25f), new Vector3(0f, 0f, 0f));
+                canLandShake = false;
+            }
         }
         else
         {
             moveDirection = transform.TransformDirection(input.x * speed, moveDirection.y, input.y * speed);
-           
-   
+
+            if (!canLandShake)
+            {
+                canLandShake = true;
+            }
             //moveDirection = transform.TransformDirection(moveDirection) * speed;
 
         }
@@ -132,6 +146,7 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(moveDirection * Time.deltaTime);
         if ((controller.collisionFlags & CollisionFlags.Below) != 0)
         {
+
             grounded = true;
             isJumping = false;
 

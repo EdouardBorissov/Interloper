@@ -10,7 +10,7 @@ public class PlayerInput : MonoBehaviour
 {
     //test comment
     private PlayerNewInput playerControlInput = null;
-
+    public Manager_Weapons weaponManager;
 
     private Vector2 previous;
     private Vector2 _down;
@@ -93,29 +93,23 @@ public class PlayerInput : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire1"))
         {
-            Manager_Weapons.instance.currentGun.FireGun();
-            CameraShaker.Instance.ShakeOnce(3, 3, .1f, .1f);
+            weaponManager.currentGun.FireGun();
+          
         }
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            weaponManager.currentGun.Reload();
+            CameraShaker.Instance.ShakeOnce(3, 3, .1f, .3f, new Vector3(0f, -0.05f, 0.50f), new Vector3(0f, 0f, 0f));
+
+        }
+
         if (Input.GetKeyDown(KeyCode.B))
         {
-            Debug.Log("Small shake");
-            CameraShaker.Instance.ShakeOnce(1, 1, .1f, 1);
+            Debug.Log("ALL AMMO!");
+            weaponManager.currentGun.SetGunAmmoReserve(weaponManager.currentGun.maxReserveAmmo);
         }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            Debug.Log("Medium shake");
-            CameraShaker.Instance.ShakeOnce(2, 2, 1f, 2);
-        }
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Debug.Log("BIG shake");
-            CameraShaker.Instance.ShakeOnce(3, 3, .05f, 1);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Debug.Log("BEEG shake");
-            CameraShaker.Instance.ShakeOnce(10, 3, .1f, 1);
-        }
+       
         _down = Vector2.zero;
         if (raw.x != previous.x)
         {
@@ -141,7 +135,10 @@ public class PlayerInput : MonoBehaviour
             jumpTimer++;
         }
         else if (jumpTimer > 0)
+        {
             jump = true;
+        }
+         
     }
 
     public bool Jump()

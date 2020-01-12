@@ -29,6 +29,7 @@ public abstract class Abstract_Gun : MonoBehaviour
     public float currentLoadedAmmo;
 
     protected Camera mainCamera;
+    protected Manager_Weapons weaponManager;
 
     [Tooltip("How ammo can be loaded into the gun.")]
     /// <summary>
@@ -61,10 +62,13 @@ public abstract class Abstract_Gun : MonoBehaviour
     public void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<Manager_Weapons>();
     }
 
 
     public abstract void FireGun();
+
+    public abstract void GunShakeCamera();
 
     public abstract void Reload();
 
