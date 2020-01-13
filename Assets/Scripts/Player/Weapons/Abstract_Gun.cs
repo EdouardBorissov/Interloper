@@ -6,11 +6,13 @@ public abstract class Abstract_Gun : MonoBehaviour
 {
     // Start is called before the first frame update
     [Header("Combat Variables")]
-
+    [Space(30)]
     [Tooltip("How often the gun can be used.")]
     /// <summary>
     /// How often (in float seconds) the gun can be used.
     /// </summary>
+    public bool playerHasThisGun = false;
+    public int weaponIndex;
     public float rateOfFire;
     public bool canFire = true;
     public bool canReload = true;
@@ -22,7 +24,7 @@ public abstract class Abstract_Gun : MonoBehaviour
     
 
     [Header("Ammo Variables")]
-
+    [Space(30)]
     [Tooltip("How much ammo is currently in the gun.")]
     /// <summary>
     /// The ammo currently loaded in the gun.
@@ -30,7 +32,7 @@ public abstract class Abstract_Gun : MonoBehaviour
     public float currentLoadedAmmo;
 
     protected Camera mainCamera;
-    protected Manager_Weapons weaponManager;
+    public Manager_Weapons weaponManager;
 
     [Tooltip("How ammo can be loaded into the gun.")]
     /// <summary>
@@ -52,6 +54,10 @@ public abstract class Abstract_Gun : MonoBehaviour
 
     [Header("Visual Variables")]
     [Space(30)]
+
+    [Tooltip("The weapon's starting position")]
+    public Vector3 gunStartPosition;
+
     [Tooltip("How much the screen shakes per shot.")]
     /// <summary>
     /// How much the screen shakes per shot.
@@ -64,6 +70,7 @@ public abstract class Abstract_Gun : MonoBehaviour
     /// </summary>
     public float screenShakeDuration;
 
+    [Tooltip("The animator on each gun, used to trigger various animations.")]
     /// <summary>
     /// The animator on each gun, used to trigger various animations.
     /// </summary>
@@ -72,6 +79,7 @@ public abstract class Abstract_Gun : MonoBehaviour
 
     public void Start()
     {
+        gunStartPosition = gameObject.transform.position;
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<Manager_Weapons>();
         gunAnimator = gameObject.GetComponent<Animator>();
@@ -104,13 +112,35 @@ public abstract class Abstract_Gun : MonoBehaviour
         canReload = false;
     }
 
-    public abstract float GetGunDamage();
+    public float GetGunDamage()
+    {
+        return damagePerAmmo;
+    }
 
-    public abstract void SetGunDamage(float newAmount);
+    public void SetGunDamage(float newAmount)
+    {
+        damagePerAmmo = newAmount;
+    }
 
-    public abstract float GetGunAmmoReserve();
+    public float GetGunAmmoReserve()
+    {
+        return currentReserveAmmo;
+    }
 
-    public abstract void SetGunAmmoReserve(float newAmount);
+    public void SetGunAmmoReserve(float newAmount)
+    {
+        currentReserveAmmo = newAmount;
+    }
+
+    public void AddGunAmmoReserve(float amountToAdd)
+    {
+        currentReserveAmmo += amountToAdd;
+        if (currentReserveAmmo > maxReserveAmmo)
+        {
+            currentReserveAmmo = maxReserveAmmo;
+        }
+        weaponManager.UpdateAmmoUI();
+    }
 
 
 }

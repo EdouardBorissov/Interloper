@@ -13,7 +13,7 @@ public class Gun_Shotgun : Abstract_Gun
     private Vector3 spread;
 
     public GameObject impactParticle;
-
+    
 
     public override void FireGun()
     {
@@ -34,7 +34,7 @@ public class Gun_Shotgun : Abstract_Gun
             {
                 //  Debug.Log("player has shot: " + i + " pellets");
 
-                spread = new Vector3(Random.Range(-shotSpread, shotSpread), Random.Range(-shotSpread, shotSpread), 0);
+                spread = new Vector3(Random.Range(-shotSpread, shotSpread), Random.Range(-shotSpread, shotSpread), Random.Range(-shotSpread, shotSpread));
 
                 if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward + spread, out hitObject, 500))
                 { // if bullets hit anything
@@ -118,30 +118,9 @@ public class Gun_Shotgun : Abstract_Gun
         }
     }
 
-
-    public override float GetGunAmmoReserve()
-    {
-        return currentReserveAmmo;
-    }
-
-    public override void SetGunAmmoReserve(float newAmount)
-    {
-        currentReserveAmmo = newAmount;
-    }
-
-    public override float GetGunDamage()
-    {
-        return damagePerAmmo;
-    }
-
-    public override void SetGunDamage(float newAmount)
-    {
-        damagePerAmmo = newAmount;
-    }
-
     public override void GunShakeCamera()
     {
-        CameraShaker.Instance.ShakeOnce(3, 3, .1f, .3f, new Vector3(0f, -0.05f, 0.50f), new Vector3(0f, 0f, 0f));
+        CameraShaker.Instance.ShakeOnce(3, 3, .1f, .3f, new Vector3(0f, -0.05f, 1f), new Vector3(0f, 0f, 0f));
     }
 
 }

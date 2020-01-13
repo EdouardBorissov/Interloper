@@ -25,7 +25,7 @@ public class PlayerInput : MonoBehaviour
 
     private void OnEnable()
     {
-        playerControlInput.Player.Enable();    
+        playerControlInput.Player.Enable();
     }
 
     private void OnDisable()
@@ -36,7 +36,7 @@ public class PlayerInput : MonoBehaviour
 
     public Vector2 input
     {
-        
+
         get
         {
             Vector2 i = Vector2.zero;
@@ -75,7 +75,7 @@ public class PlayerInput : MonoBehaviour
 
     public bool crouch // Was GetKeyDown
     {
-         get { return Keyboard.current.leftCtrlKey.wasPressedThisFrame; }
+        get { return Keyboard.current.leftCtrlKey.wasPressedThisFrame; }
     }
 
     public bool crouching // Was GetKey
@@ -91,13 +91,23 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetButtonDown("Fire1"))
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        { weaponManager.SwitchWeapon(1); }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        { weaponManager.SwitchWeapon(2); }
+
+
+
+
+        if (Input.GetButtonDown("Fire1"))
         {
             weaponManager.currentGun.FireGun();
-          
+
         }
 
-        if(Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             weaponManager.currentGun.Reload();
         }
@@ -108,7 +118,7 @@ public class PlayerInput : MonoBehaviour
             weaponManager.currentGun.SetGunAmmoReserve(weaponManager.currentGun.maxReserveAmmo);
             weaponManager.UpdateAmmoUI();
         }
-       
+
         _down = Vector2.zero;
         if (raw.x != previous.x)
         {
@@ -126,7 +136,7 @@ public class PlayerInput : MonoBehaviour
 
     public void FixedUpdate()
     {
- 
+
         //if (!Input.GetKey(KeyCode.Space))
         if (!Keyboard.current.spaceKey.isPressed)
         {
@@ -137,7 +147,7 @@ public class PlayerInput : MonoBehaviour
         {
             jump = true;
         }
-         
+
     }
 
     public bool Jump()
