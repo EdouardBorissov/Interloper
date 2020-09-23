@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+//eddie borissov
+
 public class Manager_Weapons : MonoBehaviour
 {
     public Abstract_Gun currentGun;
@@ -11,9 +13,11 @@ public class Manager_Weapons : MonoBehaviour
     public TextMeshProUGUI ammoText;
 
     public List<Abstract_Gun> gunList = new List<Abstract_Gun>();
+    public static Manager_Weapons instance;
     
     private void Start()
     {
+        instance = this;
         gunObject = currentGun.gameObject;
         UpdateAmmoUI();
     }
